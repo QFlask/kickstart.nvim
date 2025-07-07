@@ -14,7 +14,7 @@ A starting point for Neovim that is:
 
 ## Installation
 ```sh
-git clone https://github.com/QFlask/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
+git clone git@github.com:QFlask/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
 ```
 
 ### Install Neovim
