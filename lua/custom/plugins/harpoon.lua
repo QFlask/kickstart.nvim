@@ -1,20 +1,34 @@
 return {
-  'nvim-treesitter/nvim-treesitter-context',
-  event = 'VeryLazy', -- or "BufReadPre" if you want earlier loading
-  enabled = true,
+  'ThePrimeagen/harpoon',
+  branch = 'harpoon2',
+  dependencies = { 'nvim-lua/plenary.nvim' },
   config = function()
-    require('treesitter-context').setup {
-      enable = true, -- Enable this plugin (can be toggled with :TSContextToggle)
-      max_lines = 5, -- How many lines the context window should span
-      trim_scope = 'outer', -- Which context lines to discard if `max_lines` is exceeded
-      min_window_height = 0, -- Minimum editor window height to enable context (0 = always on)
-      mode = 'cursor', -- Line used to calculate context. "cursor" or "topline"
-      separator = nil, -- String between context and content. Set to "-" or "─"
-      zindex = 20, -- Z-index of the context window
-      on_attach = nil, -- Custom function to attach this plugin
-    }
+    local harpoon = require 'harpoon'
+
+    harpoon:setup()
+
+    -- Optional: your custom keymaps
+    local function map(key, func, desc)
+      vim.keymap.set('n', key, func, { desc = desc or '', noremap = true, silent = true })
+    end
+
+    map('<leader>a', function()
+      harpoon:list():add()
+    end, 'Harpoon: Add file')
+    map('<leader>m', function()
+      harpoon.ui:toggle_quick_menu(harpoon:list())
+    end, 'Harpoon: Quick Menu')
+    map('<leader>j', function()
+      harpoon:list():select(1)
+    end, 'Harpoon: Go to 1')
+    map('<leader>k', function()
+      harpoon:list():select(2)
+    end, 'Harpoon: Go to 2')
+    map('<leader>l', function()
+      harpoon:list():select(3)
+    end, 'Harpoon: Go to 3')
+    map('<leader>;', function()
+      harpoon:list():select(4)
+    end, 'Harpoon: Go to 4')
   end,
-  dependencies = {
-    'nvim-treesitter/nvim-treesitter',
-  },
 }
