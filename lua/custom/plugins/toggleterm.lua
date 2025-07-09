@@ -4,7 +4,7 @@ return {
   config = function()
     require('toggleterm').setup {
       -- Optional: you can customize settings here
-      open_mapping = [[<leader>t]],
+      -- open_mapping = [[<leader>t]],
       direction = 'float',
     }
 
@@ -23,7 +23,7 @@ return {
     vim.cmd 'autocmd! TermOpen term://*toggleterm#* lua set_terminal_keymaps()'
   end,
   keys = {
-    { '<leader>t', '<cmd>ToggleTerm<CR>', desc = 'Toggle Terminal' },
+    { '<C-\\>', '<cmd>ToggleTerm<CR>', desc = 'Toggle Terminal' },
     -- {
     --   '<leader>t',
     --   function()
