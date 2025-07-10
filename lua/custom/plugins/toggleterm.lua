@@ -5,7 +5,7 @@ return {
     require('toggleterm').setup {
       -- Optional: you can customize settings here
       -- open_mapping = [[<leader>t]],
-      direction = 'float',
+      -- direction = 'float',
     }
 
     -- Set terminal keymaps on TermOpen

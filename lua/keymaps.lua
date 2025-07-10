@@ -24,4 +24,5 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 vim.keymap.set('n', '<leader>pv', vim.cmd.Ex, { desc = ':Ex remap' })
 vim.keymap.set('n', '<leader>w', '<cmd>w<CR>', { desc = 'write buffer' })
-vim.keymap.set('t', '<Esc>', [[<C-\><C-n><C-\>]], { desc = 'Exit terminal mode' })
+vim.keymap.set('n', '<C-u>', '<C-u>zz')
+vim.keymap.set('n', '<C-d>', '<C-d>zz')
