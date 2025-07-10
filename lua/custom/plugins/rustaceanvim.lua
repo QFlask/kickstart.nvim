@@ -1,7 +1,23 @@
+-- I have no idea how to use this without also importing rust-analyzer from the lsp and having two rust-analyzer clients :(
 return {
-  {
-    'mrcjkb/rustaceanvim',
-    version = '^6', -- Recommended
-    lazy = false, -- This plugin is already lazy
-  },
+  -- {
+  --   'mrcjkb/rustaceanvim',
+  --   version = '^6', -- Recommended
+  --   lazy = false, -- This plugin is already lazy
+  --   ft = { 'rust' }, -- Makes sure it only loads for Rust files
+  --   -- init = function()
+  --   --   vim.g.rustaceanvim = {
+  --   --     server = {
+  --   --       cmd = { 'rust-analyzer' },
+  --   --       -- settings = {
+  --   --       --   ['rust-analyzer'] = {
+  --   --       --     checkOnSave = {
+  --   --       --       command = 'clippy',
+  --   --       --     },
+  --   --       -- },
+  --   --       -- },
+  --   --     },
+  --   --   }
+  --   -- end,
+  -- },
 }

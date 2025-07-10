@@ -211,18 +211,18 @@ return {
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
-        rust_analyzer = {
-          settings = {
-            ['rust_analyzer'] = {
-              cargo = {
-                allFeatures = true,
-              },
-              checkOnSave = {
-                command = 'clippy',
-              },
-            },
-          },
-        },
+        -- rust_analyzer = {
+        --   settings = {
+        --     ['rust_analyzer'] = {
+        --       cargo = {
+        --         allFeatures = true,
+        --       },
+        --       checkOnSave = {
+        --         command = 'clippy',
+        --       },
+        --     },
+        --   },
+        -- },
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -272,6 +272,9 @@ return {
         automatic_installation = false,
         handlers = {
           function(server_name)
+            if server_name == 'rust-analyzer' then
+              return
+            end
             local server = servers[server_name] or {}
             -- This handles overriding only values explicitly passed
             -- by the server configuration above. Useful when disabling
