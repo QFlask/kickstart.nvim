@@ -1,0 +1,23 @@
+{
+  "Public Struct": {
+    "prefix": "pstruct",
+    "body": [
+      "#[derive(${1:Debug})]",
+      "pub struct ${1:Name} {",
+      "    ${2:field}: ${3:Type}",
+      "}"
+    ],
+    "description": "Public Rust struct"
+  },
+  "Public Enum": {
+    "prefix": "penum",
+    "body": [
+      "#[derive(${1:Debug})]",
+      "pub enum ${1:Name} {",
+      "    ${2:Variant},",
+      "}"
+    ],
+    "description": "Public Rust enum"
+  }
+}
+

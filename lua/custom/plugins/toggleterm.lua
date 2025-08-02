@@ -24,28 +24,5 @@ return {
   end,
   keys = {
     { '<C-\\>', '<cmd>ToggleTerm<CR>', desc = 'Toggle Terminal' },
-    -- {
-    --   '<leader>t',
-    --   function()
-    --     local cwd = vim.fn.getcwd()
-    --     local Terminal = require('toggleterm.terminal').Terminal
-    --     local term = Terminal:new {
-    --       dir = cwd,
-    --       direction = 'float',
-    --       hidden = true,
-    --     }
-    --     term:toggle()
-    --   end,
-    --   desc = 'Toggle Terminal (cwd)',
-    -- },
   },
 }
-
--- return {
---   'akinsho/toggleterm.nvim',
---   version = '*',
---   config = true,
---   keys = {
---     { '<leader>t', '<cmd>ToggleTerm<CR>', desc = 'Toggle Terminal' },
---   },
--- }
