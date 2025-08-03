@@ -1,23 +1,317 @@
 {
-  "Public Struct": {
-    "prefix": "pstruct",
-    "body": [
-      "#[derive(${1:Debug})]",
-      "pub struct ${1:Name} {",
-      "    ${2:field}: ${3:Type}",
-      "}"
-    ],
-    "description": "Public Rust struct"
-  },
-  "Public Enum": {
-    "prefix": "penum",
-    "body": [
-      "#[derive(${1:Debug})]",
-      "pub enum ${1:Name} {",
-      "    ${2:Variant},",
-      "}"
-    ],
-    "description": "Public Rust enum"
-  }
+	"Struct with Derive": {
+		"prefix": "struct",
+		"body": [
+			"#[derive(${1|Debug,Debug\\, Clone,Debug\\, Clone\\, PartialEq,Debug\\, Clone\\, PartialEq\\, Eq,Debug\\, Clone\\, PartialEq\\, Eq\\, Hash,Debug\\, Clone\\, Copy,Debug\\, Clone\\, Default,Debug\\, Clone\\, serde::Serialize\\, serde::Deserialize,Debug\\, Clone\\, PartialEq\\, serde::Serialize\\, serde::Deserialize|})]",
+			"${2|,pub |}struct ${3:${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}} {",
+			"    ${4|,pub |}${5:field}: ${6:String},",
+			"    $0",
+			"}"
+		],
+		"description": "Create a struct with derive selection and optional pub visibility"
+	},
+	"Tuple Struct with Derive": {
+		"prefix": "tstruct",
+		"body": [
+			"#[derive(${1|Debug,Debug\\, Clone,Debug\\, Clone\\, PartialEq,Debug\\, Clone\\, Copy,Debug\\, Clone\\, Default|})]",
+			"${2|,pub |}struct ${3:${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}}(${4|,pub |}${5:Type});$0"
+		],
+		"description": "Create a tuple struct with derive selection and optional pub visibility"
+	},
+	"Enum with Derive": {
+		"prefix": "enum",
+		"body": [
+			"#[derive(${1|Debug,Debug\\, Clone,Debug\\, Clone\\, PartialEq,Debug\\, Clone\\, PartialEq\\, Eq,Debug\\, Clone\\, Copy,Debug\\, Clone\\, serde::Serialize\\, serde::Deserialize|})]",
+			"${2|,pub |}enum ${3:${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}} {",
+			"    ${4:Variant},",
+			"    $0",
+			"}"
+		],
+		"description": "Create an enum with derive selection and optional pub visibility"
+	},
+	"Trait": {
+		"prefix": "trait",
+		"body": [
+			"${1|,pub |}trait ${2:Name} {",
+			"    fn ${3:method}(&${4|self,mut self|}) -> ${5:ReturnType};",
+			"    $0",
+			"}"
+		],
+		"description": "Create a trait with optional pub visibility"
+	},
+	"Function": {
+		"prefix": "fn",
+		"body": [
+			"${1|,pub |}fn ${2:name}(${3:params}) -> ${4:ReturnType} {",
+			"    ${5:todo!()}",
+			"    $0",
+			"}"
+		],
+		"description": "Create a function with optional pub visibility"
+	},
+	"Async Function": {
+		"prefix": "afn",
+		"body": [
+			"${1|,pub |}async fn ${2:name}(${3:params}) -> ${4:Result<ReturnType\\, Error>} {",
+			"    ${5:todo!()}",
+			"    $0",
+			"}"
+		],
+		"description": "Create an async function with optional pub visibility"
+	},
+	"Constructor": {
+		"prefix": "new",
+		"body": [
+			"pub fn new(${1:params}) -> ${2|Self,Result<Self\\, Error>,Option<Self>|} {",
+			"    ${3|Self,Ok(Self),Some(Self)|} {",
+			"        ${4:fields}",
+			"    }${5|})",
+			"    $0",
+			"}"
+		],
+		"description": "Create a constructor method with different return types"
+	},
+	"Builder Method": {
+		"prefix": "builder",
+		"body": [
+			"pub fn ${1:with_field}(mut self, ${2:field}: ${3:Type}) -> Self {",
+			"    self.${2:field} = ${2:field};",
+			"    self",
+			"    $0",
+			"}"
+		],
+		"description": "Create a builder pattern method"
+	},
+	"Method": {
+		"prefix": "method",
+		"body": [
+			"${1|,pub |}fn ${2:name}(&${3|self,mut self|}) -> ${4|ReturnType,Result<ReturnType\\, Error>,Option<ReturnType>,())|} {",
+			"    ${5:todo!()}",
+			"    $0",
+			"}"
+		],
+		"description": "Create a method with different return type options"
+	},
+	"Impl Block": {
+		"prefix": "impl",
+		"body": [
+			"impl ${1:Type} {",
+			"    $0",
+			"}"
+		],
+		"description": "Create an impl block"
+	},
+	"Trait Implementation": {
+		"prefix": "implt",
+		"body": [
+			"impl ${1:Trait} for ${2:Type} {",
+			"    fn ${3:method}(&${4|self,mut self|}) -> ${5:ReturnType} {",
+			"        ${6:todo!()}",
+			"        $0",
+			"    }",
+			"}"
+		],
+		"description": "Implement a trait for a type"
+	},
+	"Constant": {
+		"prefix": "const",
+		"body": [
+			"${1|,pub |}const ${2:NAME}: ${3:Type} = ${4:value};$0"
+		],
+		"description": "Create a constant with optional pub visibility"
+	},
+	"Static Variable": {
+		"prefix": "static",
+		"body": [
+			"${1|,pub |}static ${2|,mut |}${3:NAME}: ${4:Type} = ${5:value};$0"
+		],
+		"description": "Create a static variable with optional pub and mut"
+	},
+	"Type Alias": {
+		"prefix": "type",
+		"body": [
+			"${1|,pub |}type ${2:Name} = ${3:ActualType};$0"
+		],
+		"description": "Create a type alias with optional pub visibility"
+	},
+	"Module": {
+		"prefix": "mod",
+		"body": [
+			"${1|,pub |}mod ${2:${TM_FILENAME_BASE/(.*)/${1:/downcase}/}} {",
+			"    ${3:// module content}",
+			"    $0",
+			"}"
+		],
+		"description": "Create a module with optional pub visibility"
+	},
+	"Match Expression": {
+		"prefix": "match",
+		"body": [
+			"match ${1:expression} {",
+			"    ${2:pattern1} => ${3:value1},",
+			"    ${4:pattern2} => ${5:value2},",
+			"    _ => ${6:default},",
+			"    $0",
+			"}"
+		],
+		"description": "Create a match expression with multiple patterns"
+	},
+	"Result/Option Match": {
+		"prefix": "oksome",
+		"body": [
+			"match ${1:result} {",
+			"    ${2|Ok,Some|}(${3:value}) => ${4:success_case},",
+			"    ${5|Err,None|}(${6:error}) => ${7:error_case},",
+			"    $0",
+			"}"
+		],
+		"description": "Match Result or Option with error handling"
+	},
+	"Question Mark Operator": {
+		"prefix": "qmark",
+		"body": [
+			"let ${1:result} = ${2:fallible_operation()}?;$0"
+		],
+		"description": "Add question mark operator with let binding"
+	},
+	"Test Function": {
+		"prefix": "test",
+		"body": [
+			"${1|#[test],#[tokio::test],#[test] #[should_panic],#[ignore]|}",
+			"fn ${2:test_name}() ${3|,-> Result<()\\, Box<dyn std::error::Error>>|} {",
+			"    ${4:assert_eq!(expected, actual);}",
+			"    ${5|,Ok(())||}",
+			"    $0",
+			"}"
+		],
+		"description": "Create a test function with different attributes"
+	},
+	"Macro Definition": {
+		"prefix": "macro",
+		"body": [
+			"macro_rules! ${1:macro_name} {",
+			"    (${2:\\$\\(\\$arg:expr\\),*}) => {",
+			"        ${3:implementation}",
+			"    };",
+			"    $0",
+			"}"
+		],
+		"description": "Create a macro definition"
+	},
+	"Documentation Comment": {
+		"prefix": "doc",
+		"body": [
+			"/// ${1:Brief description}",
+			"///",
+			"/// # Examples",
+			"///",
+			"/// ```",
+			"/// ${2:example_code()}",
+			"/// ```",
+			"$0"
+		],
+		"description": "Create documentation comment with example"
+	},
+	"Closure": {
+		"prefix": "closure",
+		"body": [
+			"|${1:params}| ${2|${3:expression},{${4:\\n    ${5:body}\\n\\}|}",
+			"$0"
+		],
+		"description": "Create a closure with expression or block body"
+	},
+	"Use Statement": {
+		"prefix": "use",
+		"body": [
+			"${1|,pub |}use ${2|${3:crate::module::Item},std::collections::${4\\|HashMap,BTreeMap,HashSet,VecDeque\\|},serde::{Serialize\\, Deserialize},std::sync::{Arc\\, Mutex},tokio::sync::{mpsc\\, oneshot}|};$0"
+		],
+		"description": "Create use statement with common patterns"
+	},
+	"Print Line": {
+		"prefix": "println",
+		"body": [
+			"println!(\"${1|${2:message},Debug: {:?}\\\" \\, ${3:variable},Pretty: {:#?}\\\" \\, ${4:variable},Error: {}\\\" \\, ${5:error}|}\");$0"
+		],
+		"description": "Print line with formatting options"
+	},
+	"Debug Print": {
+		"prefix": "dbg",
+		"body": [
+			"dbg!(${1:expression});$0"
+		],
+		"description": "Debug print macro"
+	},
+	"Unwrap Alternatives": {
+		"prefix": "unwrap",
+		"body": [
+			"${1:result}${2|.unwrap(),.expect(\\\"${3:error message}\\\"),.unwrap_or(${4:default}),.unwrap_or_else(\\|${5:err}\\| ${6:default_fn()}),.unwrap_or_default()|};$0"
+		],
+		"description": "Various unwrap alternatives"
+	},
+	"Main Function": {
+		"prefix": "main",
+		"body": [
+			"${1|,#[tokio::main],#[async_std::main]|}",
+			"${2|,async |}fn main() ${3|,-> Result<()\\, Box<dyn std::error::Error>>,-> anyhow::Result<()>|} {",
+			"    ${4:println!(\\\"Hello, world!\\\");}",
+			"    ${5|,Ok(())||}",
+			"    $0",
+			"}"
+		],
+		"description": "Create main function with async and return type options"
+	},
+	"Error Type": {
+		"prefix": "error",
+		"body": [
+			"#[derive(Debug, Clone)]",
+			"${1|,pub |}struct ${2:${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}}Error {",
+			"    ${3:message}: String,",
+			"}",
+			"",
+			"impl std::fmt::Display for ${2:${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}}Error {",
+			"    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {",
+			"        write!(f, \"{}\", self.${3:message})",
+			"    }",
+			"}",
+			"",
+			"impl std::error::Error for ${2:${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}}Error {}",
+			"$0"
+		],
+		"description": "Create a custom error type"
+	},
+	"Result Type Alias": {
+		"prefix": "result",
+		"body": [
+			"${1|,pub |}type Result<T> = std::result::Result<T, ${2:${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}}Error>;$0"
+		],
+		"description": "Create a Result type alias with custom error"
+	},
+	"Cfg Attribute": {
+		"prefix": "cfg",
+		"body": [
+			"#[cfg(${1|test,debug_assertions,feature = \\\"${2:feature_name}\\\",target_os = \\\"${3:os}\\\",not(${4:condition})|})]\n$0"
+		],
+		"description": "Add cfg attribute with common conditions"
+	},
+	"Derive More": {
+		"prefix": "derive",
+		"body": [
+			"#[derive(${1|Debug,Debug\\, Clone,Debug\\, Clone\\, PartialEq,Debug\\, Clone\\, PartialEq\\, Eq,Debug\\, Clone\\, PartialEq\\, Eq\\, Hash,Debug\\, Clone\\, Copy,Debug\\, Clone\\, Default,Debug\\, Clone\\, serde::Serialize\\, serde::Deserialize,Debug\\, Clone\\, PartialEq\\, serde::Serialize\\, serde::Deserialize,thiserror::Error,clap::Parser|})]\n$0"
+		],
+		"description": "Add derive attribute with common traits"
+	},
+	"Feature Gate": {
+		"prefix": "feature",
+		"body": [
+			"#![feature(${1:feature_name})]$0"
+		],
+		"description": "Add feature gate"
+	},
+	"Allow/Warn/Deny": {
+		"prefix": "allow",
+		"body": [
+			"#[${1|allow,warn,deny|}(${2|unused_variables,dead_code,clippy::all,clippy::pedantic,missing_docs|})]$0"
+		],
+		"description": "Add lint attribute"
+	}
 }
-

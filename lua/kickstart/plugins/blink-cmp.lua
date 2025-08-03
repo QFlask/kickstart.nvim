@@ -1,86 +1,47 @@
 return {
   {
     'saghen/blink.cmp',
-    -- optional: provides snippets for the snippet source
-    -- dependencies = { 'rafamadriz/friendly-snippets', 'L3MON4D3/LuaSnip' },
+    dependencies = { 'rafamadriz/friendly-snippets' },
 
-    -- use a release tag to download pre-built binaries
     version = '1.*',
-    -- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
-    -- build = 'cargo build --release',
-    -- If you use nix, you can build from source using latest nightly rust with:
-    -- build = 'nix run .#build-plugin',
 
     ---@module 'blink.cmp'
     ---@type blink.cmp.Config
     opts = {
       keymap = {
-        preset = 'none',
+        preset = 'default',
 
-        -- TAB: Accept completion item if visible, otherwise fallback
-        ['<Tab>'] = {
-          function(cmp)
-            local luasnip = require 'luasnip'
-            if cmp.is_visible() then
-              return cmp.select_and_accept()
-            elseif luasnip.expand_or_jumpable() then
-              vim.schedule(function()
-                luasnip.expand_or_jump()
-              end)
-              return true
-            else
-              return false
-            end
-          end,
-          'fallback',
-        },
+        -- Override specific keys while keeping defaults
+        ['<Tab>'] = { 'snippet_forward', 'select_and_accept', 'fallback' },
+        ['<S-Tab>'] = { 'snippet_backward', 'select_prev', 'fallback' },
 
-        -- ENTER: Jump forward through snippet placeholders if inside one
-        ['<CR>'] = {
-          function(cmp)
-            local luasnip = require 'luasnip'
-            if luasnip.jumpable(1) then
-              vim.schedule(function()
-                luasnip.jump(1)
-              end)
-              return true
-            -- elseif cmp.is_visible() then
-            --   return cmp.select_and_accept()
-            else
-              return false
-            end
-          end,
-          'fallback',
-        },
+        -- Keep Enter for selecting next item
+        ['<CR>'] = { 'accept', 'fallback' },
 
-        -- SHIFT-TAB: Jump backward through snippet placeholders
-        ['<S-Tab>'] = {
-          function(cmp)
-            local luasnip = require 'luasnip'
-            if luasnip.jumpable(-1) then
-              vim.schedule(function()
-                luasnip.jump(-1)
-              end)
-              return true
-            elseif cmp.is_visible() then
-              return cmp.select_prev()
-            else
-              return false
-            end
-          end,
-          'fallback',
-        },
-
-        -- Optional: keep other keybindings
-        ['<C-Space>'] = { 'show', 'show_documentation', 'hide_documentation' },
-        ['<C-e>'] = { 'hide', 'fallback' },
+        -- Navigation
         ['<C-n>'] = { 'select_next', 'fallback' },
         ['<C-p>'] = { 'select_prev', 'fallback' },
+
+        -- Documentation
+        ['<C-j>'] = { 'scroll_documentation_down', 'fallback' },
+        ['<C-k>'] = { 'scroll_documentation_up', 'fallback' },
+
+        -- Show/hide completion
+        ['<C-Space>'] = { 'show', 'show_documentation', 'hide_documentation' },
+        ['<C-e>'] = { 'hide', 'fallback' },
       },
 
-      snippet = {
+      -- Use blink.cmp's native snippet expansion (not LuaSnip)
+      snippets = {
+        preset = 'luasnip',
         expand = function(args)
-          require('luasnip').lsp_expand(args.body)
+          require('luasnip').lsp_expand(args)
+        end,
+        active = function()
+          return require('luasnip').jumpable(1) or require('luasnip').jumpable(-1)
+        end,
+        jump = function(dir)
+          require('luasnip').jump(dir)
         end,
       },
 
@@ -93,24 +54,36 @@ return {
         menu = {
           draw = {
             treesitter = { 'lsp' },
+            columns = { { 'kind_icon' }, { 'label', 'label_description', gap = 1 }, { 'source_name' } },
           },
+        },
+        list = {
+          selection = { preselect = true }, -- Preselect first item (usually snippet)
         },
       },
 
-      -- Default list of enabled providers defined so that you can extend it
-      -- elsewhere in your config, without redefining it, due to `opts_extend`
+      -- Use blink.cmp's native snippets source (not luasnip preset)
       sources = {
-        default = { 'lsp', 'snippets', 'path', 'snippets', 'buffer' },
+        default = { 'snippets', 'lsp', 'path', 'buffer' },
         providers = {
           snippets = {
-            opts = {
-              preset = 'luasnip',
-            },
+            name = 'snippets',
+            module = 'blink.cmp.sources.snippets',
+            score_offset = 100, -- Boost snippet scores to appear first
+            opts = {},
           },
 
-          -- Don't show LuaLS require statements when lazydev has items
-          lsp = { fallbacks = { 'lazydev' } },
+          -- Lower priority for LSP to let snippets win
+          lsp = {
+            fallbacks = { 'lazydev' },
+            score_offset = -10, -- Lower LSP priority slightly
+          },
           lazydev = { name = 'LazyDev', module = 'lazydev.integrations.blink' },
+
+          -- Even lower priority for buffer completions
+          buffer = {
+            score_offset = -50,
+          },
         },
       },
 
@@ -120,7 +93,7 @@ return {
         nerd_font_variant = 'mono',
       },
 
-      -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
+      -- Rust fuzzy matcher for better performance
       fuzzy = { implementation = 'prefer_rust_with_warning' },
 
       -- Signature help
